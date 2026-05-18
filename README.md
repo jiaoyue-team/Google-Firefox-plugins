@@ -1,2 +1,1 @@
-# Google-Firefox-plugins
-The plugin is open source; feel free to download and use it.
+<h1>Google/火狐 插件</h1> 
