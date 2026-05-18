@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <h1>Google/火狐 插件</h1> 
 <h1>服務條款 (Terms of Service)</h1>
 
@@ -35,3 +36,5 @@
 ---
 *最後更新日期：2024年10月24日*
 *版權所有 (c) 2026 jiaoyue-team*
+=======
+>>>>>>> Stashed changes
