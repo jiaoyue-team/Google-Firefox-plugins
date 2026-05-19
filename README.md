@@ -35,6 +35,6 @@
 
 ---
 <h5>*最後更新日期：2025年05月19日*
-*版權所有 (c) 2026 jiaoyue-team*</h5>
+*版權所有 ©2026 jiaoyue-team*</h5>
 =======
 >>>>>>> Stashed changes
