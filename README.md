@@ -15,7 +15,7 @@
 
 ### 🦊 Firefox 安裝步驟
 - 可直接前往 Firefox Add-ons 安裝：  
-  👉 [Firefox 附加元件商店連結](https://addons.mozilla.org/en-US/firefox/addon/%E7%81%AB%E7%8B%90%E4%B8%BB%E9%A1%8C/)
+  👉 [Firefox 附加元件商店連結](https://addons.mozilla.org/zh-TW/firefox/addon/jiaoyue-homepage-theme/)
 
 ---
 
