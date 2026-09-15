@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="pageTitle">我的新首頁</title>
+    <link rel="stylesheet" href="newtab.css">
+    <style>
+        .modal-close-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 32px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+        }
+
+        #bookmarks-list.hide-labels .bookmark-title,
+        #dock-folder-popover.hide-labels .folder-item-title {
+            display: none !important;
+        }
+
+        .modal-close-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.16) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25), inset 0 1px 1.5px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-left-container">
+        <button id="bookmarks-btn" class="glass-btn" title="我的書籤" data-i18n-title="bookmarksTitle">🔖</button>
+    </div>
+
+
+    <div class="clock-container">
+        <h1 id="clock">00:00</h1>
+        <div id="weather" title="點擊查看預報" data-i18n-title="weatherTooltip">正在獲取天氣...</div>
+        <div id="forecast-popup" class="hidden">
+
+        </div>
+    </div>
+
+
+    <div class="search-container">
+        <div class="search-box">
+            <form action="https://www.google.com/search" method="get">
+                <input type="text" name="q" placeholder="在 Google 上搜尋..." data-i18n-placeholder="searchPlaceholder" autofocus autocomplete="off">
+            </form>
+            <div class="search-icons">
+                <button id="voice-btn" class="icon-btn" title="語音輸入" data-i18n-title="voiceBtnTitle">🎤</button>
+                <button id="image-search-btn" class="icon-btn" title="以圖搜圖" data-i18n-title="imageSearchBtnTitle">📷</button>
+                <button id="ai-btn" class="icon-btn" title="AI 模式" data-i18n-title="aiBtnTitle">🤖</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="bg-controls">
+        <button id="settings-btn" title="設定" data-i18n-title="settingsTitle">⚙️</button>
+        <button id="bg-btn" title="更換背景" data-i18n-title="bgBtnTitle">🖼️</button>
+    </div>
+
+
+    <div id="settings-modal" class="hidden">
+        <h3 data-i18n="settingsHeader">設定</h3>
+        <div class="settings-tabs">
+            <div class="tab-btn active" data-tab="display" data-i18n="tabDisplay">畫面設定</div>
+            <div class="tab-btn" data-tab="text" data-i18n="tabText">文字設定</div>
+        </div>
+        <div class="settings-content">
+            <div class="tab-wrapper" id="settings-tab-wrapper">
+                <div id="tab-display" class="tab-pane active">
+                    <div class="setting-item checkbox-item">
+                        <label class="switch">
+                            <input type="checkbox" id="setting-show-ai" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <label for="setting-show-ai" class="setting-label-text" data-i18n="showAi">顯示 AI 模式按鈕</label>
+                    </div>
+                    <div class="setting-item" id="setting-ai-engine-container">
+                        <label for="setting-ai-engine" data-i18n="aiEngine">預設 AI 引擎</label>
+                        <select id="setting-ai-engine" class="select-input">
+                            <option value="google">Google AI</option>
+                            <option value="gemini">Gemini</option>
+                            <option value="chatgpt">ChatGPT</option>
+                            <option value="claude">Claude</option>
+                        </select>
+                    </div>
+                    <div class="setting-item checkbox-item">
+                        <label class="switch">
+                            <input type="checkbox" id="setting-show-voice" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <label for="setting-show-voice" class="setting-label-text" data-i18n="showVoice">顯示語音輸入按鈕</label>
+                    </div>
+                    <div class="setting-item checkbox-item">
+                        <label class="switch">
+                            <input type="checkbox" id="setting-show-image-search" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <label for="setting-show-image-search" class="setting-label-text" data-i18n="showImageSearch">顯示以圖搜圖按鈕</label>
+                    </div>
+                    <div class="setting-item checkbox-item">
+                        <label class="switch">
+                            <input type="checkbox" id="setting-show-dock-text" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <label for="setting-show-dock-text" class="setting-label-text" data-i18n="showDockText">顯示書籤文字</label>
+                    </div>
+                    <div class="setting-item checkbox-item" id="setting-dock-autohide-container" style="display: none;">
+                        <label class="switch">
+                            <input type="checkbox" id="setting-dock-autohide">
+                            <span class="slider"></span>
+                        </label>
+                        <label for="setting-dock-autohide" class="setting-label-text" data-i18n="dockAutoHide">自動隱藏 Dock 欄</label>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; margin: 5px 0;">
+                    <div class="setting-item">
+                        <div class="setting-header">
+                            <label for="search-pos-y" data-i18n="searchPosY">垂直位置 (Y軸)</label>
+                            <button type="button" class="reset-btn" id="reset-search-pos-y" title="重設" data-i18n-title="resetBtnTitle" aria-label="Reset">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                    <path d="M3 3v5h5"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <input type="range" id="search-pos-y" min="10" max="82" value="45">
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-header">
+                            <label for="search-pos-x" data-i18n="searchPosX">水平位置 (X軸)</label>
+                            <button type="button" class="reset-btn" id="reset-search-pos-x" title="重設" data-i18n-title="resetBtnTitle" aria-label="Reset">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                    <path d="M3 3v5h5"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <input type="range" id="search-pos-x" min="0" max="100" value="50">
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-header">
+                            <label for="search-scale" data-i18n="searchScale">大小縮放</label>
+                            <button type="button" class="reset-btn" id="reset-search-scale" title="重設" data-i18n-title="resetBtnTitle" aria-label="Reset">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                    <path d="M3 3v5h5"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <input type="range" id="search-scale" min="0.5" max="2.0" step="0.1" value="1.0">
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; margin: 5px 0;">
+                    <div class="setting-item" id="setting-dock-mode-container">
+                        <label data-i18n="dockMode">Dock 欄模式</label>
+                        <div class="segmented-control" id="dock-mode-segmented" data-active="popup">
+                            <div class="segmented-indicator"></div>
+                            <button type="button" class="segment-btn active" data-value="popup" data-i18n="dockModePopup">頂部懸浮 (預設)</button>
+                            <button type="button" class="segment-btn" data-value="bottom" data-i18n="dockModeBottom">底部常駐 (Apple)</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-text" class="tab-pane">
+                    <div class="setting-item">
+                        <label for="setting-language" data-i18n="globalLanguage">全局語言</label>
+                        <select id="setting-language" class="select-input">
+                            <option value="zh-TW">繁體中文</option>
+                            <option value="zh-CN">简体中文</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="setting-font-family" data-i18n="fontFamily">字體選擇</label>
+                        <select id="setting-font-family" class="select-input">
+                            <option value="system-ui, -apple-system, sans-serif" data-i18n="fontOptionSystem">系統預設 (System UI)</option>
+                            <option value="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" data-i18n="fontOptionDefault">預設 (無襯線)</option>
+                            <option value="'Microsoft JhengHei', '微軟正黑體', sans-serif" data-i18n="fontOptionJhengHei">微軟正黑體</option>
+                            <option value="'PMingLiU', '新細明體', serif" data-i18n="fontOptionMingLiU">新細明體</option>
+                            <option value="'Noto Sans TC', sans-serif" data-i18n="fontOptionNotoSans">思源黑體</option>
+                            <option value="Courier New, monospace" data-i18n="fontOptionMono">等寬字體</option>
+                            <option value="'Kaiti TC', '楷體', serif" data-i18n="fontOptionKaiti">楷體</option>
+                            <option value="'Comic Sans MS', 'Comic Sans', cursive">Comic Sans MS</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="setting-font-color" data-i18n="fontColor">文字顏色</label>
+                        <input type="color" id="setting-font-color" value="#ffffff" style="width: 100%; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    </div>
+                    <div class="setting-item">
+                        <label for="setting-font-size" data-i18n="clockSize">時鐘大小</label>
+                        <input type="range" id="setting-font-size" min="2" max="15" step="0.5" value="6">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="close-settings-modal" class="modal-close-btn" data-i18n="closeBtn">關閉</button>
+    </div>
+
+
+    <div id="bg-modal" class="hidden">
+        <h3 data-i18n="bgHeader">選擇背景圖片</h3>
+
+        <div class="bg-section">
+            <p><strong data-i18n="builtInBg">內建圖片</strong></p>
+            <div id="extension-bg-list">
+
+                <p class="hint" data-i18n="builtInHint">請在 newtab.js 中設定圖片檔名</p>
+            </div>
+        </div>
+
+        <div class="bg-section" style="margin-top: 30px;">
+            <p><strong data-i18n="onlineBg">網路圖片連結</strong></p>
+            <div class="url-input-wrapper" style="display: flex; gap: 8px; margin-top: 10px;">
+                <input type="text" id="url-bg-input" placeholder="貼上圖片網址 (https://...)" data-i18n-placeholder="onlinePlaceholder"
+                    style="flex: 1; padding: 6px 10px; font-size: 0.85rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                <button id="url-bg-submit" class="btn-upload" data-i18n="applyBtn"
+                    style="width: auto; padding: 6px 12px; font-size: 0.85rem; border-radius: 6px;">套用</button>
+            </div>
+        </div>
+
+        <div class="bg-section" style="margin-top: 30px;">
+            <p><strong data-i18n="localBg">本地圖片</strong></p>
+            <div class="file-upload-wrapper">
+                <button class="btn-upload" data-i18n="localUploadBtn">📂 選擇電腦中的圖片</button>
+                <input type="file" id="local-bg-input" accept="image/*,.webp">
+            </div>
+        </div>
+
+        <button id="close-bg-modal" class="modal-close-btn" data-i18n="closeWindowBtn">關閉視窗</button>
+    </div>
+
+
+    <div id="image-search-modal" class="hidden">
+        <h3 data-i18n="lensHeader">Google 智慧鏡頭</h3>
+        <div id="drop-zone">
+            <div class="drop-icon">📷</div>
+            <p data-i18n="dropZoneText">拖放圖片到這裡</p>
+            <p class="sub-text"><span data-i18n="dropZoneOr">或是</span> <span id="trigger-file-select" class="link-text" data-i18n="dropZoneClick">點擊上傳</span></p>
+            <p class="sub-text" style="opacity: 0.6; font-size: 0.8rem; margin-top: 5px;" data-i18n="dropZoneHint">支援 Ctrl+V 貼上圖片</p>
+        </div>
+        <button id="close-image-search-modal" class="modal-close-btn" data-i18n="closeBtn">關閉</button>
+    </div>
+
+
+    <div id="bookmarks-modal" class="hidden">
+        <h3 data-i18n="bookmarksHeader">我的書籤</h3>
+        <div id="bookmarks-list" class="bookmarks-content">
+
+        </div>
+        <button id="close-bookmarks-modal" class="modal-close-btn" data-i18n="closeBtn">關閉</button>
+    </div>
+
+    <!-- Dock Folder Popover (macOS Stack style) -->
+    <div id="dock-folder-popover" class="folder-popover hidden">
+        <div class="folder-popover-header">
+            <button type="button" id="folder-popover-back" class="folder-back-btn hidden" title="返回上一層">‹</button>
+            <div class="folder-popover-title">
+                <span class="folder-title-icon">📁</span>
+                <span id="folder-popover-name">資料夾</span>
+                <span id="folder-popover-count" class="folder-count-badge">0</span>
+            </div>
+            <button type="button" id="close-folder-popover" class="folder-close-btn" title="關閉">✕</button>
+        </div>
+        <div id="folder-popover-items" class="folder-popover-grid">
+
+        </div>
+    </div>
+
+    <div id="dock-bottom-trigger"></div>
+
+
+    <form id="image-search-form" action="https://www.google.com/searchbyimage/upload" method="post"
+        enctype="multipart/form-data" style="display:none;">
+        <input type="file" name="encoded_image" id="image-search-input" accept="image/*,.webp">
+    </form>
+
+    <script src="newtab.js"></script>
+</body>
+
+</html>

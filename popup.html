@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>書籤捷徑</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="header-title">
+        <div class="header-icon-badge">🔖</div>
+        <h2>書籤捷徑</h2>
+        <span id="bookmark-count" class="count-badge">0</span>
+      </div>
+      <div class="header-actions">
+        <button id="btn-newtab" class="action-icon-btn" title="開啟新首頁">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </button>
+        <button id="btn-bookmarks-mgr" class="action-icon-btn" title="開啟書籤管理員">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Source Tabs -->
+    <div class="source-tabs" id="source-tabs">
+      <button type="button" class="source-tab active" data-source="theme">我的主題書籤</button>
+      <button type="button" class="source-tab" data-source="bar">書籤列</button>
+    </div>
+
+    <!-- Breadcrumb Navigation for Folders -->
+    <div id="popup-breadcrumb" class="popup-breadcrumb hidden">
+      <button type="button" id="btn-popup-back" class="breadcrumb-back-btn">
+        <span class="back-arrow">‹</span>
+        <span id="breadcrumb-title" class="breadcrumb-text">返回</span>
+      </button>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box-wrapper">
+      <svg class="search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="search-input" placeholder="搜尋書籤..." autocomplete="off">
+      <button type="button" id="clear-search-btn" class="clear-search-btn hidden" title="清除">✕</button>
+    </div>
+
+    <!-- Bookmarks List -->
+    <ul id="bookmarks-list" class="bookmarks-list">
+      <li class="loading-state">
+        <div class="spinner"></div>
+        <span>載入書籤中...</span>
+      </li>
+    </ul>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <button type="button" id="footer-newtab-btn" class="footer-btn">開啟新分頁 🚀</button>
+      <span class="version-tag">Google 主題</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
